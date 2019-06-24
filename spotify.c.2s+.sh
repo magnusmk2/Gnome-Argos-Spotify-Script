@@ -15,7 +15,13 @@ if [ ! -z "$ARTIST" ]; then
 	echo "$ARTIST - $SONG_TITLE | image='$MEDIA_ICON' imageWidth=20"
 	echo "---"
 	if [ ! -z "$ARTWORK" ]; then
-		echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
+		if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
+                	echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a Spotify' terminal=false"
+		elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
+			echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a Spotify Premium' terminal=false"
+		else
+			echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
+		fi
 		echo "$ARTIST"
 		echo "$SONG_TITLE"
 		echo "---"
@@ -24,7 +30,14 @@ if [ ! -z "$ARTIST" ]; then
 		echo "Skip Forward | iconName=media-skip-forward bash='$NEXT' terminal=false"
 		if [ $(xwininfo -all -id 0x4a00001 | grep "Hidden" | wc -l) == "1" ]; then
 			echo "---"
-			echo "Open Spotify | bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
+			if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
+                                echo "Open Spotify | bash='wmctrl -a Spotify' terminal=false"
+                        elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
+                                echo "Open Spotify | bash='wmctrl -a Spotify Premium' terminal=false"
+                        else
+                                echo "Open Spotify | bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
+                        fi
+
 		fi
 	else
 		echo "No Artwork"
