@@ -10,4 +10,4 @@ Place the script inside your `~/.config/argos/` and make it excutable `chmod +x 
 
 You can change the information update frequency by renaming the file, please see Argos documentation: https://github.com/p-e-w/argos#filename-format
 
-![Exmaple](https://raw.githubusercontent.com/MPUKMagnus/Gnome-Argos-Spotify-Script/edit/master/exmaple.png)
+[Example](https://raw.githubusercontent.com/MPUKMagnus/Gnome-Argos-Spotify-Script/edit/master/exmaple.png)
