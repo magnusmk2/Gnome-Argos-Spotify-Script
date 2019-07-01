@@ -11,39 +11,38 @@ PLAY_PAUSE="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/m
 NEXT="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
 PREVIOUS="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"
 
-if [ ! -z "$ARTIST" ]; then
-	echo "$ARTIST - $SONG_TITLE | image='$MEDIA_ICON' imageWidth=20"
-	echo "---"
-	if [ ! -z "$ARTWORK" ]; then
-		if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
-                	echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a Spotify' terminal=false"
-		elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
-			echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a Spotify Premium' terminal=false"
-		else
-			echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
-		fi
-		echo "$ARTIST"
-		echo "$SONG_TITLE"
-		echo "---"
-		echo "Skip Back | iconName=media-skip-backward bash='$PREVIOUS' terminal=false"
-		echo "Play Pause | iconName=media-playback-start bash='$PLAY_PAUSE' terminal=false"
-		echo "Skip Forward | iconName=media-skip-forward bash='$NEXT' terminal=false"
-		if [ $(xwininfo -all -id 0x4a00001 | grep "Hidden" | wc -l) == "1" ]; then
-			echo "---"
-			if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
-                                echo "Open Spotify | bash='wmctrl -a Spotify' terminal=false"
-                        elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
-                                echo "Open Spotify | bash='wmctrl -a Spotify Premium' terminal=false"
-                        else
-                                echo "Open Spotify | bash='wmctrl -a $ARTIST - $SONG_TITLE' terminal=false"
-                        fi
+function FIND_WINDOW_NAME(){
+        if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
+                WINDOW_NAME="Spotify"
+    elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
+                WINDOW_NAME="Spotify Premium"
+        else
+                WINDOW_NAME="$ARTIST - $SONG_TITLE"
+    fi
+}
 
-		fi
-	else
-		echo "No Artwork"
-	fi
+FIND_WINDOW_NAME
+
+if [ ! -z "$ARTIST" ]; then
+        echo "$ARTIST - $SONG_TITLE | image='$MEDIA_ICON' imageWidth=20"
+        echo "---"
+        if [ ! -z "$ARTWORK" ]; then
+                echo "| image='$MEDIA_ICON' imageWidth=160 bash='wmctrl -a $WINDOW_NAME' terminal=false"
+                echo "$ARTIST"
+                echo "$SONG_TITLE"
+                echo "---"
+                echo "Skip Back | iconName=media-skip-backward bash='$PREVIOUS' terminal=false"
+                echo "Play Pause | iconName=media-playback-start bash='$PLAY_PAUSE' terminal=false"
+                echo "Skip Forward | iconName=media-skip-forward bash='$NEXT' terminal=false"
+                if [ $(xwininfo -all -name "$ARTIST - $SONG_TITLE" | grep "Hidden" | wc -l) == "1" ]; then
+                        echo "---"
+                        echo "Open Spotify | bash='wmctrl -a $WINDOW_NAME' terminal=false"
+                fi
+        else
+                echo "No Artwork"
+        fi
 else
-	echo "Spotify | bash='spotify' terminal=false"
-	echo "---"
-	echo "Launch Spotify | bash='spotify' terminal=false"
+        echo "Spotify | bash='spotify' terminal=false"
+        echo "---"
+        echo "Launch Spotify | bash='spotify' terminal=false"
 fi
