@@ -12,13 +12,13 @@ NEXT="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/M
 PREVIOUS="dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"
 
 function FIND_WINDOW_NAME(){
-        if [ $(wmctrl -l | grep "Spotify" | wc -l) = "1" ]; then
-                WINDOW_NAME="Spotify"
-    elif [ $(wmctrl -l | grep "Spotify Premium" | wc -l) = "1" ]; then
-                WINDOW_NAME="Spotify Premium"
-        else
-                WINDOW_NAME="$ARTIST - $SONG_TITLE"
-    fi
+	if [ $(wmctrl -l | grep "\<Spotify\>" | wc -l) = "1" ]; then
+                	WINDOW_NAME="Spotify"
+		elif [ $(wmctrl -l | grep "\<Spotify Premium\>" | wc -l) = "1" ]; then
+                	WINDOW_NAME="Spotify Premium"
+        	else
+                	WINDOW_NAME="$ARTIST - $SONG_TITLE"
+	fi
 }
 
 FIND_WINDOW_NAME
